@@ -63,7 +63,7 @@
           </p>
         </div>
 
-        <div class="divider">
+        <!-- <div class="divider">
           <span>或者</span>
         </div>
 
@@ -77,7 +77,7 @@
             </svg>
             使用 Google 登录
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -162,7 +162,7 @@ const loginWithGoogle = () => {
 <style scoped>
 .auth-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   display: flex;
   align-items: center;
   justify-content: center;
