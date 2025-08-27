@@ -6,6 +6,9 @@
 </template>
 
 <script setup lang="ts">
+// 使用相对路径导入
+import { useUserStore } from '../stores/user'
+
 // 设置页面 meta
 useHead({
   title: 'Meomo - 随时随地记录你的想法',
@@ -16,6 +19,19 @@ useHead({
   ],
   htmlAttrs: {
     lang: 'zh-CN'
+  }
+})
+
+// 在客户端初始化认证状态 - 使用nextTick确保Pinia已初始化
+onMounted(async () => {
+  // 等待下一个tick确保Pinia完全初始化
+  await nextTick()
+  
+  try {
+    const userStore = useUserStore()
+    userStore.initializeAuth()
+  } catch (error) {
+    console.error('Failed to initialize auth:', error)
   }
 })
 </script>

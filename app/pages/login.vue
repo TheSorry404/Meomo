@@ -85,6 +85,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+// 使用相对路径导入stores
+import { useUserStore } from '../../stores/user'
 
 // 定义组件名称
 defineOptions({
@@ -118,31 +120,15 @@ const handleLogin = async () => {
   error.value = ''
 
   try {
-    // 这里使用 stores，但由于 TypeScript 错误，先用模拟实现
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: form.value.email,
-        password: form.value.password,
-      }),
-    })
+    // 使用用户store进行登录
+    const userStore = useUserStore()
+    const result = await userStore.login(form.value.email, form.value.password)
 
-    const result = await response.json()
-
-    if (result.code === 200) {
-      // 保存 token 和用户信息
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('auth_token', result.data.token)
-        localStorage.setItem('user_info', JSON.stringify(result.data.user))
-      }
-      
-      // 跳转到仪表板
+    if (result.success) {
+      // 登录成功，跳转到仪表板
       await navigateTo('/dashboard')
     } else {
-      error.value = result.message || '登录失败'
+      error.value = result.error || '登录失败'
     }
   } catch (err) {
     error.value = '网络错误，请稍后重试'
