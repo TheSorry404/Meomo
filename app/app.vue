@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang="ts">
-// 使用相对路径导入
-import { useUserStore } from '../stores/user'
+// 使用安全的 composable
+import { useUserStore } from '../composables/useUserStore'
 
 // 设置页面 meta
 useHead({

@@ -24,3 +24,6 @@ logs
 !.env.example
 
 data/database.json
+Xeon_node_modules
+Curo_node_modules
+node-compile-cache

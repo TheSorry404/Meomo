@@ -85,8 +85,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-// 使用相对路径导入stores
-import { useUserStore } from '../../stores/user'
+// 使用安全的 composable
+import { useUserStore } from '../../composables/useUserStore'
 
 // 定义组件名称
 defineOptions({
@@ -99,6 +99,9 @@ definePageMeta({
   auth: false
 })
 
+// // 在 setup 中初始化 store
+// const userStore = useUserStore()
+
 // 响应式数据
 const form = ref({
   email: '',
@@ -109,8 +112,25 @@ const form = ref({
 const loading = ref(false)
 const error = ref('')
 
+const isStoreReady = ref(false)
+
+onMounted(async () => {
+  // 等待一个tick确保Pinia完全加载
+  await nextTick()
+  try {
+    useUserStore() // 测试是否可用
+    isStoreReady.value = true
+  } catch (err) {
+    console.error('Store初始化失败:', err)
+  }
+})
+
 // 登录处理
 const handleLogin = async () => {
+  if (!isStoreReady.value) {
+    error.value = '系统正在初始化，请稍后重试'
+    return
+  }
   if (!form.value.email || !form.value.password) {
     error.value = '请填写所有必填字段'
     return
@@ -120,7 +140,7 @@ const handleLogin = async () => {
   error.value = ''
 
   try {
-    // 使用用户store进行登录
+    // 使用已初始化的用户store进行登录
     const userStore = useUserStore()
     const result = await userStore.login(form.value.email, form.value.password)
 
