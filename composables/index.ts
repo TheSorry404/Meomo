@@ -1,3 +1,5 @@
 // 全局可用的组合式函数，确保类型正确
 export { useUserStore } from './useUserStore'
 export { useAuthCookie } from './useAuthCookie'
+export { useUserStore } from './useUserStore'
+export { useAuthCookie } from './useAuthCookie'
