@@ -4,13 +4,20 @@
 
 ## Quick Start
 
+1. 安装依赖 (务必使用NPM包管理器)
+   ```bash
+   npm install
+   ```
+1. 配置环境变量
+   - 复制 `.env.example` 文件并重命名为 `.env`
+   - 根据需要修改环境变量
 1. 初始化数据库
    ```bash
    npx prisma migrate dev --name init
    ```
-2. 启动开发服务器
+1. 启动开发服务器
    ```bash
    npm run dev
    ```
-3. 打开浏览器并访问 `http://localhost:3000`
-4. 享受开发 Meomo 的乐趣！
+1. 打开浏览器并访问 `http://localhost:3000`
+1. 享受开发 Meomo 的乐趣！
