@@ -1,62 +1,63 @@
-import { requireAuth } from '../../utils/auth'
-import { getDatabase } from '../../../lib/database'
+import { requireAuth } from "../../utils/auth";
+import { getDatabase } from "../../lib/database";
 
-export default requireAuth(defineEventHandler(async (event) => {
-  assertMethod(event, 'PUT')
-  
-  try {
-    const user = event.context.user
-    
-    if (!user) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: '用户未认证'
-      })
-    }
-    
-    const { username, email } = await readBody(event)
-    
-    // 至少需要提供一个更新字段
-    if (!username && !email) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: '请提供要更新的信息'
-      })
-    }
-    
-    const db = getDatabase()
-    
-    const updateData: any = {}
-    if (username) updateData.username = username
-    if (email) updateData.email = email
-    
-    const updatedUser = await db.updateUser(user.userId, updateData)
-    
-    if (!updatedUser) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: '更新失败'
-      })
-    }
-    
-    // 不返回密码
-    const { password, ...safeUserProfile } = updatedUser
-    
-    return {
-      success: true,
-      data: { user: safeUserProfile },
-      message: '更新成功'
-    }
-    
-  } catch (error: any) {
-    if (error.statusCode) {
-      throw error
-    }
-    
-    console.error('更新用户信息错误:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: '更新用户信息失败'
-    })
-  }
-}))
+export default requireAuth(
+	defineEventHandler(async (event) => {
+		assertMethod(event, "PUT");
+
+		try {
+			const user = event.context.user;
+
+			if (!user) {
+				throw createError({
+					statusCode: 401,
+					statusMessage: "用户未认证",
+				});
+			}
+
+			const { username, email } = await readBody(event);
+
+			// 至少需要提供一个更新字段
+			if (!username && !email) {
+				throw createError({
+					statusCode: 400,
+					statusMessage: "请提供要更新的信息",
+				});
+			}
+
+			const db = getDatabase();
+
+			const updateData: any = {};
+			if (username) updateData.username = username;
+			if (email) updateData.email = email;
+
+			const updatedUser = await db.updateUser(user.userId, updateData);
+
+			if (!updatedUser) {
+				throw createError({
+					statusCode: 500,
+					statusMessage: "更新失败",
+				});
+			}
+
+			// 不返回密码
+			const { password, ...safeUserProfile } = updatedUser;
+
+			return {
+				success: true,
+				data: { user: safeUserProfile },
+				message: "更新成功",
+			};
+		} catch (error: any) {
+			if (error.statusCode) {
+				throw error;
+			}
+
+			console.error("更新用户信息错误:", error);
+			throw createError({
+				statusCode: 500,
+				statusMessage: "更新用户信息失败",
+			});
+		}
+	})
+);

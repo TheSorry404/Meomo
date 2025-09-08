@@ -1,69 +1,91 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-container">
-      <div class="auth-card">
-        <div class="auth-header">
-          <h1>📝 Meomo</h1>
-          <h2>登录到你的账户</h2>
-          <p>继续你的创作之旅</p>
-        </div>
+	<div class="auth-page">
+		<div class="auth-container">
+			<div class="auth-card">
+				<div class="auth-header">
+					<h1>📝 Meomo</h1>
+					<h2>登录到你的账户</h2>
+					<p>继续你的创作之旅</p>
+				</div>
 
-        <form class="auth-form" @submit.prevent="handleLogin">
-          <div class="form-group">
-            <label for="email">邮箱地址</label>
-            <input
-              id="email"
-              v-model="form.email"
-              type="email"
-              placeholder="请输入邮箱地址"
-              required
-              :disabled="loading"
-            >
-          </div>
+				<form
+					class="auth-form"
+					@submit.prevent="handleLogin"
+				>
+					<div class="form-group">
+						<label for="email">邮箱地址</label>
+						<input
+							id="email"
+							v-model="form.email"
+							type="email"
+							placeholder="请输入邮箱地址"
+							required
+							:disabled="loading"
+						/>
+					</div>
 
-          <div class="form-group">
-            <label for="password">密码</label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              placeholder="请输入密码"
-              required
-              :disabled="loading"
-            >
-          </div>
+					<div class="form-group">
+						<label for="password">密码</label>
+						<input
+							id="password"
+							v-model="form.password"
+							type="password"
+							placeholder="请输入密码"
+							required
+							:disabled="loading"
+						/>
+					</div>
 
-          <div class="form-options">
-            <label class="checkbox-label">
-              <input v-model="form.rememberMe" type="checkbox">
-              <span class="checkmark" />
-              记住我
-            </label>
-            <NuxtLink to="/forgot-password" class="forgot-link">
-              忘记密码？
-            </NuxtLink>
-          </div>
+					<div class="form-options">
+						<label class="checkbox-label">
+							<input
+								v-model="form.rememberMe"
+								type="checkbox"
+							/>
+							<span class="checkmark" />
+							记住我
+						</label>
+						<NuxtLink
+							to="/forgot-password"
+							class="forgot-link"
+						>
+							忘记密码？
+						</NuxtLink>
+					</div>
 
-          <button type="submit" class="btn btn-primary" :disabled="loading">
-            <span v-if="loading" class="loading-spinner" />
-            {{ loading ? '登录中...' : '登录' }}
-          </button>
+					<button
+						type="submit"
+						class="btn btn-primary"
+						:disabled="loading"
+					>
+						<span
+							v-if="loading"
+							class="loading-spinner"
+						/>
+						{{ loading ? "登录中..." : "登录" }}
+					</button>
 
-          <div v-if="error" class="error-message">
-            {{ error }}
-          </div>
-        </form>
+					<div
+						v-if="error"
+						class="error-message"
+					>
+						{{ error }}
+					</div>
+				</form>
 
-        <div class="auth-footer">
-          <p>
-            还没有账户？
-            <NuxtLink to="/register" class="auth-link">
-              立即注册
-            </NuxtLink>
-          </p>
-        </div>
+				<div class="auth-footer">
+					<p>
+						还没有账户？
+						<NuxtLink
+							to="/register"
+							class="auth-link"
+						>
+							立即注册
+						</NuxtLink>
+					</p>
+				</div>
 
-        <!-- <div class="divider">
+				<!-- <div class="divider">
           <span>或者</span>
         </div>
 
@@ -78,322 +100,324 @@
             使用 Google 登录
           </button>
         </div> -->
-      </div>
-    </div>
-  </div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from "vue";
 // 使用安全的 composable
-import { useUserStore } from '../../composables/useUserStore'
+import { useUserStore } from "../composables/useUserStore";
 
 // 定义组件名称
 defineOptions({
-  name: 'LoginPage'
-})
+	name: "LoginPage",
+});
 
 // 页面 meta
 definePageMeta({
-  layout: false,
-  auth: false
-})
+	layout: false,
+	auth: false,
+});
 
 // // 在 setup 中初始化 store
 // const userStore = useUserStore()
 
 // 响应式数据
 const form = ref({
-  email: '',
-  password: '',
-  rememberMe: false
-})
+	email: "",
+	password: "",
+	rememberMe: false,
+});
 
-const loading = ref(false)
-const error = ref('')
+const loading = ref(false);
+const error = ref("");
 
-const isStoreReady = ref(false)
+const isStoreReady = ref(false);
 
 onMounted(async () => {
-  // 等待一个tick确保Pinia完全加载
-  await nextTick()
-  try {
-    useUserStore() // 测试是否可用
-    isStoreReady.value = true
-  } catch (err) {
-    console.error('Store初始化失败:', err)
-  }
-})
+	// 等待一个tick确保Pinia完全加载
+	await nextTick();
+	try {
+		useUserStore(); // 测试是否可用
+		isStoreReady.value = true;
+	} catch (err) {
+		console.error("Store初始化失败:", err);
+	}
+});
 
 // 登录处理
 const handleLogin = async () => {
-  if (!isStoreReady.value) {
-    error.value = '系统正在初始化，请稍后重试'
-    return
-  }
-  if (!form.value.email || !form.value.password) {
-    error.value = '请填写所有必填字段'
-    return
-  }
+	if (!isStoreReady.value) {
+		error.value = "系统正在初始化，请稍后重试";
+		return;
+	}
+	if (!form.value.email || !form.value.password) {
+		error.value = "请填写所有必填字段";
+		return;
+	}
 
-  loading.value = true
-  error.value = ''
+	loading.value = true;
+	error.value = "";
 
-  try {
-    // 使用已初始化的用户store进行登录
-    const userStore = useUserStore()
-    const result = await userStore.login(form.value.email, form.value.password)
+	try {
+		// 使用已初始化的用户store进行登录
+		const userStore = useUserStore();
+		const result = await userStore.login(form.value.email, form.value.password);
 
-    if (result.success) {
-      // 登录成功，跳转到仪表板
-      await navigateTo('/dashboard')
-    } else {
-      error.value = result.error || '登录失败'
-    }
-  } catch (err) {
-    error.value = '网络错误，请稍后重试'
-    console.error('Login error:', err)
-  } finally {
-    loading.value = false
-  }
-}
+		if (result.success) {
+			// 登录成功，跳转到仪表板
+			await navigateTo("/dashboard");
+		} else {
+			error.value = result.error || "登录失败";
+		}
+	} catch (err) {
+		error.value = "网络错误，请稍后重试";
+		console.error("Login error:", err);
+	} finally {
+		loading.value = false;
+	}
+};
 
 // Google 登录
 const loginWithGoogle = () => {
-  // TODO: 实现 Google OAuth 登录
-  console.log('Google login not implemented yet')
-}
+	// TODO: 实现 Google OAuth 登录
+	console.log("Google login not implemented yet");
+};
 </script>
 
 <style scoped>
 .auth-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
+	min-height: 100vh;
+	background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
 }
 
 .auth-container {
-  width: 100%;
-  max-width: 400px;
+	width: 100%;
+	max-width: 400px;
 }
 
 .auth-card {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+	background: white;
+	border-radius: 1rem;
+	padding: 2rem;
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
 .auth-header {
-  text-align: center;
-  margin-bottom: 2rem;
+	text-align: center;
+	margin-bottom: 2rem;
 }
 
 .auth-header h1 {
-  font-size: 2rem;
-  color: #4338ca;
-  margin-bottom: 0.5rem;
+	font-size: 2rem;
+	color: #4338ca;
+	margin-bottom: 0.5rem;
 }
 
 .auth-header h2 {
-  font-size: 1.5rem;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
+	font-size: 1.5rem;
+	color: #1f2937;
+	margin-bottom: 0.5rem;
 }
 
 .auth-header p {
-  color: #6b7280;
+	color: #6b7280;
 }
 
 .auth-form {
-  margin-bottom: 1.5rem;
+	margin-bottom: 1.5rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+	margin-bottom: 1rem;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #374151;
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
+	color: #374151;
 }
 
 .form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid #d1d5db;
+	border-radius: 0.5rem;
+	font-size: 1rem;
+	transition:
+		border-color 0.3s ease,
+		box-shadow 0.3s ease;
 }
 
 .form-group input:focus {
-  outline: none;
-  border-color: #4338ca;
-  box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1);
+	outline: none;
+	border-color: #4338ca;
+	box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1);
 }
 
 .form-group input:disabled {
-  background-color: #f3f4f6;
-  cursor: not-allowed;
+	background-color: #f3f4f6;
+	cursor: not-allowed;
 }
 
 .form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1.5rem;
 }
 
 .checkbox-label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 0.9rem;
-  color: #374151;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	font-size: 0.9rem;
+	color: #374151;
 }
 
 .checkbox-label input {
-  margin-right: 0.5rem;
+	margin-right: 0.5rem;
 }
 
 .forgot-link {
-  color: #4338ca;
-  text-decoration: none;
-  font-size: 0.9rem;
+	color: #4338ca;
+	text-decoration: none;
+	font-size: 0.9rem;
 }
 
 .forgot-link:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 .btn {
-  width: 100%;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+	width: 100%;
+	padding: 0.75rem;
+	border: none;
+	border-radius: 0.5rem;
+	font-size: 1rem;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
 }
 
 .btn-primary {
-  background: #4338ca;
-  color: white;
+	background: #4338ca;
+	color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #3730a3;
+	background: #3730a3;
 }
 
 .btn-primary:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
+	background: #9ca3af;
+	cursor: not-allowed;
 }
 
 .btn-social {
-  background: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
+	background: white;
+	color: #374151;
+	border: 1px solid #d1d5db;
 }
 
 .btn-social:hover {
-  background: #f9fafb;
+	background: #f9fafb;
 }
 
 .loading-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid currentColor;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+	width: 16px;
+	height: 16px;
+	border: 2px solid transparent;
+	border-top: 2px solid currentColor;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .error-message {
-  background: #fef2f2;
-  color: #dc2626;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  border: 1px solid #fecaca;
+	background: #fef2f2;
+	color: #dc2626;
+	padding: 0.75rem;
+	border-radius: 0.5rem;
+	margin-top: 1rem;
+	font-size: 0.9rem;
+	border: 1px solid #fecaca;
 }
 
 .auth-footer {
-  text-align: center;
-  color: #6b7280;
+	text-align: center;
+	color: #6b7280;
 }
 
 .auth-link {
-  color: #4338ca;
-  text-decoration: none;
-  font-weight: 500;
+	color: #4338ca;
+	text-decoration: none;
+	font-weight: 500;
 }
 
 .auth-link:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 .divider {
-  text-align: center;
-  margin: 1.5rem 0;
-  position: relative;
+	text-align: center;
+	margin: 1.5rem 0;
+	position: relative;
 }
 
 .divider::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: #e5e7eb;
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background: #e5e7eb;
 }
 
 .divider span {
-  background: white;
-  padding: 0 1rem;
-  color: #6b7280;
-  font-size: 0.9rem;
+	background: white;
+	padding: 0 1rem;
+	color: #6b7280;
+	font-size: 0.9rem;
 }
 
 .social-login {
-  margin-top: 1rem;
+	margin-top: 1rem;
 }
 
 .social-icon {
-  width: 20px;
-  height: 20px;
+	width: 20px;
+	height: 20px;
 }
 
 @media (max-width: 480px) {
-  .auth-card {
-    padding: 1.5rem;
-  }
-  
-  .auth-header h1 {
-    font-size: 1.8rem;
-  }
-  
-  .auth-header h2 {
-    font-size: 1.3rem;
-  }
+	.auth-card {
+		padding: 1.5rem;
+	}
+
+	.auth-header h1 {
+		font-size: 1.8rem;
+	}
+
+	.auth-header h2 {
+		font-size: 1.3rem;
+	}
 }
 </style>

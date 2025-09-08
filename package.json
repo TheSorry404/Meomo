@@ -1,40 +1,43 @@
 {
-  "name": "nuxt-app",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "dependencies": {
-    "@nuxt/content": "^3.6.3",
-    "@nuxt/eslint": "^1.9.0",
-    "@nuxt/image": "^1.11.0",
-    "@nuxt/ui": "^3.3.2",
-    "@pinia/nuxt": "^0.11.2",
-    "@types/bcryptjs": "^3.0.0",
-    "@types/cors": "^2.8.19",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/uuid": "^10.0.0",
-    "axios": "^1.11.0",
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "eslint": "^9.33.0",
-    "jsonwebtoken": "^9.0.2",
-    "nuxt": "^4.0.3",
-    "typescript": "^5.9.2",
-    "uuid": "^11.1.0",
-    "vue": "^3.5.18",
-    "vue-router": "^4.5.1"
-  },
-  "devDependencies": {
-    "@unocss/nuxt": "^66.4.2",
-    "less": "^4.4.1",
-    "unocss": "^66.4.2",
-    "unplugin-auto-import": "^20.0.0",
-    "unplugin-vue-components": "^29.0.0"
-  }
+	"name": "nuxt-app",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare"
+	},
+	"dependencies": {
+		"@nuxt/content": "^3.6.3",
+		"@nuxt/eslint": "^1.9.0",
+		"@nuxt/image": "^1.11.0",
+		"@nuxt/ui": "^3.3.2",
+		"@pinia/nuxt": "^0.11.2",
+		"@types/bcryptjs": "^3.0.0",
+		"@types/cors": "^2.8.19",
+		"@types/jsonwebtoken": "^9.0.10",
+		"@types/uuid": "^10.0.0",
+		"axios": "^1.11.0",
+		"bcryptjs": "^3.0.2",
+		"cors": "^2.8.5",
+		"eslint": "^9.33.0",
+		"jsonwebtoken": "^9.0.2",
+		"nuxt": "^4.0.3",
+		"pinia": "^3.0.3",
+		"typescript": "^5.9.2",
+		"uuid": "^11.1.0",
+		"vue": "^3.5.18",
+		"vue-router": "^4.5.1"
+	},
+	"devDependencies": {
+		"@unocss/nuxt": "^66.4.2",
+		"less": "^4.4.1",
+		"prettier": "^3.5.3",
+		"prettier-plugin-tailwindcss": "^0.6.12",
+		"unocss": "^66.4.2",
+		"unplugin-auto-import": "^20.0.0",
+		"unplugin-vue-components": "^29.0.0"
+	}
 }
