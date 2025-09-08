@@ -117,12 +117,8 @@
         <div class="storage-bar">
           <div class="storage-fill" :style="{ width: storagePercentage + '%' }" />
         </div>
-        <div class="storage-text">
-          {{ usedStorage }} / {{ totalStorage }} 已使用
-        </div>
-        <button class="upgrade-btn" @click="showUpgradeOptions">
-          升级存储
-        </button>
+        <div class="storage-text">{{ usedStorage }} / {{ totalStorage }} 已使用</div>
+        <button class="upgrade-btn" @click="showUpgradeOptions">升级存储</button>
       </div>
     </div>
 
@@ -134,25 +130,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue';
 
 // Props
 interface Props {
-  collapsed?: boolean
+  collapsed?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   collapsed: false
-})
+});
 
 // Emits
-const emit = defineEmits(['toggle-collapse', 'filter-by-tag'])
+const emit = defineEmits(['toggle-collapse', 'filter-by-tag']);
 
 // 响应式数据
-const isCollapsed = ref(props.collapsed)
-const pinnedCount = ref(5)
-const usedStorage = ref('2.3 GB')
-const totalStorage = ref('10 GB')
+const isCollapsed = ref(props.collapsed);
+const pinnedCount = ref(5);
+const usedStorage = ref('2.3 GB');
+const totalStorage = ref('10 GB');
 
 // 示例标签数据
 const popularTags = ref([
@@ -161,45 +157,45 @@ const popularTags = ref([
   { name: '学习', count: 12 },
   { name: '项目', count: 6 },
   { name: '想法', count: 20 }
-])
+]);
 
 // 计算存储使用百分比
 const storagePercentage = computed(() => {
-  const used = parseFloat(usedStorage.value.replace(' GB', ''))
-  const total = parseFloat(totalStorage.value.replace(' GB', ''))
-  return Math.round((used / total) * 100)
-})
+  const used = parseFloat(usedStorage.value.replace(' GB', ''));
+  const total = parseFloat(totalStorage.value.replace(' GB', ''));
+  return Math.round((used / total) * 100);
+});
 
 // 方法
 const toggleCollapse = () => {
-  isCollapsed.value = !isCollapsed.value
-  emit('toggle-collapse', isCollapsed.value)
-}
+  isCollapsed.value = !isCollapsed.value;
+  emit('toggle-collapse', isCollapsed.value);
+};
 
 const showPinned = () => {
   // TODO: 显示置顶备忘录
-  console.log('Show pinned memos')
-}
+  console.log('Show pinned memos');
+};
 
 const showRecent = () => {
   // TODO: 显示最近编辑的备忘录
-  console.log('Show recent memos')
-}
+  console.log('Show recent memos');
+};
 
 const showFavorites = () => {
   // TODO: 显示收藏的备忘录
-  console.log('Show favorite memos')
-}
+  console.log('Show favorite memos');
+};
 
 const filterByTag = (tagName: string) => {
-  emit('filter-by-tag', tagName)
-  console.log('Filter by tag:', tagName)
-}
+  emit('filter-by-tag', tagName);
+  console.log('Filter by tag:', tagName);
+};
 
 const showUpgradeOptions = () => {
   // TODO: 显示升级选项
-  console.log('Show upgrade options')
-}
+  console.log('Show upgrade options');
+};
 </script>
 
 <style scoped>
@@ -341,7 +337,6 @@ const showUpgradeOptions = () => {
 
 .storage-info {
   position: absolute;
-  bottom: 1rem;
   left: 1rem;
   right: 1rem;
   background: #f9fafb;
@@ -481,11 +476,11 @@ const showUpgradeOptions = () => {
     transform: translateX(-100%);
     width: 280px;
   }
-  
+
   .dashboard-sidebar.mobile-open {
     transform: translateX(0);
   }
-  
+
   .collapse-btn {
     display: none;
   }

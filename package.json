@@ -35,8 +35,10 @@
 	},
 	"devDependencies": {
 		"@unocss/nuxt": "^66.4.2",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.4",
 		"less": "^4.4.1",
-		"prettier": "^3.5.3",
+		"prettier": "^3.6.2",
 		"prettier-plugin-tailwindcss": "^0.6.12",
 		"unocss": "^66.4.2",
 		"unplugin-auto-import": "^20.0.0",

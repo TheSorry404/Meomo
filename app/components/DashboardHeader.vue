@@ -2,27 +2,17 @@
   <header class="dashboard-header">
     <div class="header-content">
       <div class="header-left">
-        <button class="sidebar-toggle" @click="toggleSidebar">
-          ☰
-        </button>
+        <button class="sidebar-toggle" @click="toggleSidebar">☰</button>
         <h1 class="app-title">📝 Meomo</h1>
       </div>
-      
+
       <div class="header-center">
         <div class="quick-search">
-          <input
-            v-model="quickSearchQuery"
-            type="text"
-            placeholder="快速搜索..."
-            class="quick-search-input"
-            @keyup.enter="performQuickSearch"
-          >
-          <button class="quick-search-btn" @click="performQuickSearch">
-            🔍
-          </button>
+          <input v-model="quickSearchQuery" type="text" placeholder="快速搜索..." class="quick-search-input" @keyup.enter="performQuickSearch" />
+          <button class="quick-search-btn" @click="performQuickSearch">🔍</button>
         </div>
       </div>
-      
+
       <div class="header-right">
         <div class="header-actions">
           <button class="action-btn" title="通知" @click="showNotifications">
@@ -31,26 +21,20 @@
               {{ unreadCount }}
             </span>
           </button>
-          
+
           <div class="user-menu" @click="toggleUserMenu">
             <div class="user-avatar">
-              <img v-if="user?.avatar" :src="user.avatar" :alt="user.username">
+              <img v-if="user?.avatar" :src="user.avatar" :alt="user.username" />
               <span v-else>{{ userInitials }}</span>
             </div>
             <span class="username">{{ user?.username }}</span>
             <span class="dropdown-arrow">▾</span>
-            
+
             <div v-if="showUserDropdown" class="user-dropdown">
-              <NuxtLink to="/profile" class="dropdown-item">
-                👤 个人资料
-              </NuxtLink>
-              <NuxtLink to="/settings" class="dropdown-item">
-                ⚙️ 设置
-              </NuxtLink>
+              <NuxtLink to="/profile" class="dropdown-item"> 👤 个人资料 </NuxtLink>
+              <NuxtLink to="/settings" class="dropdown-item"> ⚙️ 设置 </NuxtLink>
               <div class="dropdown-divider" />
-              <button class="dropdown-item logout-btn" @click="handleLogout">
-                🚪 退出登录
-              </button>
+              <button class="dropdown-item logout-btn" @click="handleLogout">🚪 退出登录</button>
             </div>
           </div>
         </div>
@@ -60,16 +44,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useUserStore } from '#imports'
+import { ref, computed } from 'vue';
+import { useUserStore } from '#imports';
 
 // Props & Emits
-const emit = defineEmits(['toggle-sidebar'])
+const emit = defineEmits(['toggle-sidebar']);
 
 // 响应式数据
-const quickSearchQuery = ref('')
-const showUserDropdown = ref(false)
-const unreadCount = ref(3) // 示例通知数量
+const quickSearchQuery = ref('');
+const showUserDropdown = ref(false);
+const unreadCount = ref(3); // 示例通知数量
 
 // 模拟用户数据
 const user = ref({
@@ -77,58 +61,58 @@ const user = ref({
   username: '张三',
   email: 'zhangsan@example.com',
   avatar: null
-})
+});
 
 // 计算用户名首字母
 const userInitials = computed(() => {
-  if (!user.value?.username) return 'U'
-  return user.value.username.charAt(0).toUpperCase()
-})
+  if (!user.value?.username) return 'U';
+  return user.value.username.charAt(0).toUpperCase();
+});
 
 // 方法
 const toggleSidebar = () => {
-  emit('toggle-sidebar')
-}
+  emit('toggle-sidebar');
+};
 
 const performQuickSearch = () => {
   if (quickSearchQuery.value.trim()) {
     // TODO: 实现快速搜索逻辑
-    console.log('Quick search:', quickSearchQuery.value)
+    console.log('Quick search:', quickSearchQuery.value);
   }
-}
+};
 
 const showNotifications = () => {
   // TODO: 显示通知面板
-  console.log('Show notifications')
-}
+  console.log('Show notifications');
+};
 
 const toggleUserMenu = () => {
-  showUserDropdown.value = !showUserDropdown.value
-}
+  showUserDropdown.value = !showUserDropdown.value;
+};
 
 const handleLogout = async () => {
   if (confirm('确定要退出登录吗？')) {
     const userStore = useUserStore();
     await userStore.logout();
   }
-}
+};
 
 // 点击外部关闭下拉菜单
 const handleClickOutside = (event: Event) => {
-  const target = event.target as HTMLElement
+  const target = event.target as HTMLElement;
   if (!target.closest('.user-menu')) {
-    showUserDropdown.value = false
+    showUserDropdown.value = false;
   }
-}
+};
 
 // 生命周期
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
+  document.addEventListener('click', handleClickOutside);
+});
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <style scoped>
@@ -196,7 +180,9 @@ onUnmounted(() => {
   border: 1px solid #d1d5db;
   border-radius: 2rem;
   font-size: 0.9rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .quick-search-input:focus {
@@ -354,11 +340,11 @@ onUnmounted(() => {
   .header-center {
     display: none;
   }
-  
+
   .username {
     display: none;
   }
-  
+
   .app-title {
     font-size: 1.25rem;
   }
@@ -368,11 +354,11 @@ onUnmounted(() => {
   .sidebar-toggle {
     display: block;
   }
-  
+
   .header-left {
     gap: 0.5rem;
   }
-  
+
   .header-actions {
     gap: 0.5rem;
   }
