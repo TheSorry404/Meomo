@@ -30,3 +30,5 @@ node-compile-cache
 /app/generated/prisma
 
 /app/generated/prisma
+
+data/database.json
