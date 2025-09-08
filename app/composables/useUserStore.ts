@@ -1,14 +1,8 @@
 import { useUserStore as _useUserStore } from "~/stores/user";
 import { storeToRefs } from "pinia";
-import { createPinia } from 'pinia'
-import { createApp } from 'vue'
-import App from '../app.vue'
 
 export function useUserStore() {
 	try {
-		const pinia = createPinia()
-		const app = createApp(App)
-		app.use(pinia)
 		const store = _useUserStore();
 
 		if (!store) {
