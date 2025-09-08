@@ -61,6 +61,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useUserStore } from '#imports'
 
 // Props & Emits
 const emit = defineEmits(['toggle-sidebar'])
@@ -105,10 +106,10 @@ const toggleUserMenu = () => {
   showUserDropdown.value = !showUserDropdown.value
 }
 
-const handleLogout = () => {
+const handleLogout = async () => {
   if (confirm('确定要退出登录吗？')) {
-    // TODO: 实现退出登录逻辑
-    console.log('Logout')
+    const userStore = useUserStore();
+    await userStore.logout();
   }
 }
 

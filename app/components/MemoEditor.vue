@@ -53,7 +53,7 @@
                   placeholder="添加标签..."
                   class="tag-input"
                   @keyup.enter="addTag"
-                  @keyup.comma="addTag"
+                  :disabled="saving"
                 >
                 <button class="add-tag-btn" @click="addTag">+</button>
               </div>

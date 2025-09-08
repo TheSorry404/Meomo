@@ -4,9 +4,7 @@ export default defineEventHandler(async (event) => {
 	assertMethod(event, "POST");
 
 	try {
-		// 在实际应用中，这里可以将token加入黑名单
-		// 或者清除服务端存储的会话信息
-
+		// 清除认证相关的cookie
 		return {
 			success: true,
 			message: "登出成功",

@@ -187,27 +187,16 @@ const handleRegister = async () => {
   success.value = false
 
   try {
-    const response = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: form.value.username,
-        email: form.value.email,
-        password: form.value.password,
-      }),
-    })
-
-    const result = await response.json()
-
-    if (result.code === 200) {
+    const userStore = useUserStore();
+    const result = await userStore.register(form.value.username, form.value.email, form.value.password);    
+    
+    if (result.success) {
       success.value = true
       
       // 3秒后跳转到登录页面
       setTimeout(() => {
         navigateTo('/login')
-      }, 3000)
+      }, 1000)
     } else {
       error.value = result.message || '注册失败'
     }

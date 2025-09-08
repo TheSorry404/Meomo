@@ -164,9 +164,14 @@ const handleLogin = async () => {
 	try {
 		// 使用已初始化的用户store进行登录
 		const userStore = useUserStore();
-		const result = await userStore.login(form.value.email, form.value.password);
+    const result = await userStore.login(form.value.email, form.value.password);
 
-		if (result.success) {
+    console.log("Login result:", result);
+    
+
+    if (result.success) {
+      console.log("Login successful, navigating to dashboard");
+      
 			// 登录成功，跳转到仪表板
 			await navigateTo("/dashboard");
 		} else {

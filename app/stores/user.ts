@@ -1,13 +1,7 @@
 import { defineStore } from "pinia";
 import type { User } from "../types";
-import {
-	apiService,
-	API_ENDPOINTS,
-	type LoginRequest,
-	type RegisterRequest,
-	type LoginResponse,
-	type ApiResponse,
-} from "../services/api";
+import { login, register, logout } from "../services/auth";
+import { getUserProfile } from "~/services/user";
 
 interface UserState {
 	user: User | null;
@@ -84,31 +78,15 @@ export const useUserStore = defineStore("user", {
 
 		async login(email: string, password: string) {
 			try {
-				const loginData: LoginRequest = { email, password };
-				const response = await apiService.post<ApiResponse<LoginResponse>>(
-					API_ENDPOINTS.AUTH.LOGIN,
-					loginData
-				);
+				const response: any = await login(email, password);
 
-				console.log("Login response:", response);
-
-				// 根据响应格式获取数据
-				let token: string;
-				let user: User;
-
-				if ("data" in response && response.data) {
-					// 标准API响应格式
-					token = response.data.token;
-					user = response.data.user;
-				} else {
-					// 直接响应格式 - 先转换为unknown再转换
-					const directResponse = response as unknown as LoginResponse;
-					token = directResponse.token;
-					user = directResponse.user;
+				if (!("data" in response) && !response.data) {
+					// 处理错误情况
+					throw new Error("登录失败");
 				}
 
-				this.setToken(token);
-				this.setUser(user);
+				this.setToken(response.data.token);
+				this.setUser(response.data.user);
 
 				return { success: true };
 			} catch (error: unknown) {
@@ -120,47 +98,24 @@ export const useUserStore = defineStore("user", {
 			}
 		},
 
-		async register(userData: {
-			username: string;
-			email: string;
-			password: string;
-		}) {
-			try {
-				const registerData: RegisterRequest = userData;
-				const response = await apiService.post<ApiResponse<LoginResponse>>(
-					API_ENDPOINTS.AUTH.REGISTER,
-					registerData
-				);
-
-				// 根据响应格式获取数据
-				let token: string;
-				let user: User;
-
-				if ("data" in response && response.data) {
-					// 标准API响应格式
-					token = response.data.token;
-					user = response.data.user;
-				} else {
-					// 直接响应格式
-					const directResponse = response as unknown as LoginResponse;
-					token = directResponse.token;
-					user = directResponse.user;
-				}
-
-				this.setToken(token);
-				this.setUser(user);
-
-				return { success: true };
-			} catch (error: unknown) {
-				console.error("Registration failed:", error);
+		async register(username: string, email: string, password: string) {
+			const response: any = await register({ username, email, password });
+			if (response.error || !("data" in response) || !response.data) {
 				return {
 					success: false,
-					error: error instanceof Error ? error.message : "Registration failed",
+					message: response.message || "注册失败",
 				};
 			}
+
+			this.setToken(response.data.token);
+			this.setUser(response.data.user);
+
+			return response;
 		},
 
-		logout() {
+		async logout() {
+			await logout();
+
 			this.user = null;
 			this.token = null;
 			this.isAuthenticated = false;
@@ -170,22 +125,13 @@ export const useUserStore = defineStore("user", {
 				removeCookie("auth_token");
 				removeCookie("user_info");
 
-				// 可选：调用后端登出API
-				try {
-					apiService.post(API_ENDPOINTS.AUTH.LOGOUT);
-				} catch (error) {
-					console.warn("Failed to notify backend of logout:", error);
-				}
-
 				window.location.href = "/login";
 			}
 		},
 
 		async fetchUserProfile() {
 			try {
-				const response = await apiService.get<ApiResponse<User>>(
-					API_ENDPOINTS.USER.PROFILE
-				);
+				const response = await getUserProfile();
 
 				// 根据响应格式获取用户数据
 				let user: User;

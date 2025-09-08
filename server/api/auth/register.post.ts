@@ -11,9 +11,9 @@ export default defineEventHandler(async (event) => {
 
 		// 验证必填字段
 		if (!username || !email || !password) {
-			throw createError({
-				statusCode: 400,
-				message: "用户名、邮箱和密码不能为空",
+			return createError({
+				status: 400,
+				message: "用户名、邮箱和密码为必填项",
 			});
 		}
 
@@ -23,6 +23,10 @@ export default defineEventHandler(async (event) => {
 			throw createError({
 				statusCode: 400,
 				message: "邮箱格式不正确",
+				data: {
+					code: 500,
+					message: "邮箱格式不正确",
+				},
 			});
 		}
 
@@ -31,6 +35,10 @@ export default defineEventHandler(async (event) => {
 			throw createError({
 				statusCode: 400,
 				message: "密码长度至少6位",
+				data: {
+					code: 500,
+					message: "密码长度至少6位",
+				},
 			});
 		}
 
@@ -42,6 +50,10 @@ export default defineEventHandler(async (event) => {
 			throw createError({
 				statusCode: 500,
 				message: "该邮箱已被注册",
+				data: {
+					code: 500,
+					message: "该邮箱已被注册",
+				},
 			});
 		}
 

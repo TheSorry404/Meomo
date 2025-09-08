@@ -260,6 +260,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useApi } from "~/composables/useApi";
 import type { Memo } from "~/types";
 
 // 定义组件名称
@@ -431,36 +432,18 @@ const changePage = (page: number) => {
 const loadMemos = async () => {
 	loading.value = true;
 	try {
-		// TODO: 实现从 API 加载备忘录
-		// 模拟数据
-		await new Promise((resolve) => setTimeout(resolve, 1000));
-
-		memos.value = [
-			{
-				id: "1",
-				title: "会议记录",
-				content: "今天的产品讨论会议内容...",
-				tags: ["工作", "会议"],
-				isPinned: true,
-				userId: "user1",
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				color: "#e0e7ff",
-			},
-			{
-				id: "2",
-				title: "购物清单",
-				content: "牛奶、面包、鸡蛋、水果",
-				tags: ["生活", "购物"],
-				isPinned: false,
-				userId: "user1",
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				color: "#fef3c7",
-			},
-		];
-
-		totalMemos.value = memos.value.length;
+    // 获取Memos
+    const response = await useApi().get('/memos', {
+      params: {
+        page: currentPage.value,
+        pageSize: pageSize.value,
+        search: searchQuery.value,
+        tags: selectedTags.value.join(','),
+        timeRange: selectedTimeRange.value
+      }
+    })
+    console.log(response);
+    
 	} catch (error) {
 		console.error("Failed to load memos:", error);
 	} finally {
