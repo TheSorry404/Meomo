@@ -1,15 +1,17 @@
 import { requireAuth } from "../../utils/auth";
-import { getDatabase } from "../../lib/database";
+import { PrismaClient } from "@prisma/client";
 
 export default requireAuth(
 	defineEventHandler(async (event) => {
+		const prisma = new PrismaClient();
+		assertMethod(event, "POST");
 		try {
 			const user = event.context.user;
 
 			if (!user) {
 				throw createError({
 					statusCode: 401,
-					statusMessage: "用户未认证",
+					message: "用户未认证",
 				});
 			}
 
@@ -19,18 +21,18 @@ export default requireAuth(
 			if (!title || !content) {
 				throw createError({
 					statusCode: 400,
-					statusMessage: "标题和内容不能为空",
+					message: "标题和内容不能为空",
 				});
 			}
 
-			const db = getDatabase();
-
 			// 创建备忘录
-			const memo = await db.createMemo({
-				userId: user.userId,
-				title,
-				content,
-				tags: tags || [],
+			const memo = await prisma.memo.create({
+				data: {
+					title,
+					content,
+					tags: tags || [],
+					userId: user.userId,
+				},
 			});
 
 			return {
@@ -46,7 +48,7 @@ export default requireAuth(
 			console.error("创建备忘录错误:", error);
 			throw createError({
 				statusCode: 500,
-				statusMessage: "创建备忘录失败",
+				message: "创建备忘录失败",
 			});
 		}
 	})

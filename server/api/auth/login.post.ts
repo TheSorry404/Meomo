@@ -1,8 +1,9 @@
 import { verifyPassword } from "../../lib/password";
 import { generateTokenPair, type JwtPayload } from "../../lib/auth";
-import { getDatabase } from "../../lib/database";
+import { PrismaClient } from "@prisma/client";
 
 export default defineEventHandler(async (event) => {
+	const prisma = new PrismaClient();
 	assertMethod(event, "POST");
 
 	try {
@@ -12,18 +13,19 @@ export default defineEventHandler(async (event) => {
 		if (!email || !password) {
 			throw createError({
 				statusCode: 400,
-				statusMessage: "邮箱和密码不能为空",
+				message: "邮箱和密码不能为空",
 			});
 		}
 
-		const db = getDatabase();
-
 		// 查找用户
-		const user = await db.getUserByEmail(email);
+		const user = await prisma.user.findUnique({
+			where: { email },
+		});
+
 		if (!user) {
 			throw createError({
 				statusCode: 401,
-				statusMessage: "邮箱或密码错误",
+				message: "邮箱或密码错误",
 			});
 		}
 
@@ -32,7 +34,7 @@ export default defineEventHandler(async (event) => {
 		if (!isPasswordValid) {
 			throw createError({
 				statusCode: 401,
-				statusMessage: "邮箱或密码错误",
+				message: "邮箱或密码错误",
 			});
 		}
 
@@ -67,7 +69,7 @@ export default defineEventHandler(async (event) => {
 		console.error("登录错误:", error);
 		throw createError({
 			statusCode: 500,
-			statusMessage: "登录失败，请稍后重试",
+			message: "登录失败，请稍后重试",
 		});
 	}
 });

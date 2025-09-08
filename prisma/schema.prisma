@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * 用户账户信息
+ */
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(20)
+  email     String   @unique @db.VarChar(255)
+  avatar    String?  @db.VarChar(512)
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  memos     Memo[]
+
+  @@map("users")
+}
+
+/**
+ * 用户备忘录
+ */
+model Memo {
+  id        Int       @id @default(autoincrement())
+  title     String    @db.VarChar(100)
+  content   String    @db.Text
+  tags      Json?     @db.Json
+  color     String?   @default("#ffffff") @db.VarChar(9)
+  isPinned  Boolean   @default(false) @map("is_pinned")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int       @map("user_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([userId, isPinned])
+  @@map("memos")
+}

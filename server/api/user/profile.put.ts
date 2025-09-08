@@ -1,8 +1,9 @@
 import { requireAuth } from "../../utils/auth";
-import { getDatabase } from "../../lib/database";
+import { PrismaClient } from "@prisma/client";
 
 export default requireAuth(
 	defineEventHandler(async (event) => {
+		const prisma = new PrismaClient();
 		assertMethod(event, "PUT");
 
 		try {
@@ -11,7 +12,7 @@ export default requireAuth(
 			if (!user) {
 				throw createError({
 					statusCode: 401,
-					statusMessage: "用户未认证",
+					message: "用户未认证",
 				});
 			}
 
@@ -21,22 +22,23 @@ export default requireAuth(
 			if (!username && !email) {
 				throw createError({
 					statusCode: 400,
-					statusMessage: "请提供要更新的信息",
+					message: "请提供要更新的信息",
 				});
 			}
-
-			const db = getDatabase();
 
 			const updateData: any = {};
 			if (username) updateData.username = username;
 			if (email) updateData.email = email;
 
-			const updatedUser = await db.updateUser(user.userId, updateData);
+			const updatedUser = await prisma.user.update({
+				where: { id: user.userId },
+				data: updateData,
+			});
 
 			if (!updatedUser) {
 				throw createError({
 					statusCode: 500,
-					statusMessage: "更新失败",
+					message: "更新失败",
 				});
 			}
 
@@ -56,7 +58,7 @@ export default requireAuth(
 			console.error("更新用户信息错误:", error);
 			throw createError({
 				statusCode: 500,
-				statusMessage: "更新用户信息失败",
+				message: "更新用户信息失败",
 			});
 		}
 	})

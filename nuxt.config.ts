@@ -10,7 +10,7 @@ export default defineNuxtConfig({
 	ssr: false, // 禁用服务端渲染，纯客户端应用
 
 	// 基础模块
-	modules: ["@pinia/nuxt", "@unocss/nuxt", "@nuxt/eslint"],
+	modules: ["@pinia/nuxt", "@unocss/nuxt", "@nuxt/eslint", "@prisma/nuxt"],
 
 	// css: [
 	//   './assets/css/main.css'

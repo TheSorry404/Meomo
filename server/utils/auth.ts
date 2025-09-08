@@ -23,7 +23,7 @@ export const requireAuth = (handler: EventHandler): EventHandler => {
 			if (!token) {
 				throw createError({
 					statusCode: 401,
-					statusMessage: "未提供认证token",
+					message: "未提供认证token",
 				});
 			}
 
@@ -44,7 +44,7 @@ export const requireAuth = (handler: EventHandler): EventHandler => {
 			// 其他错误统一处理为认证失败
 			throw createError({
 				statusCode: 401,
-				statusMessage: "Token验证失败",
+				message: "Token验证失败",
 			});
 		}
 	});

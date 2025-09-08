@@ -90,6 +90,8 @@ export const useUserStore = defineStore("user", {
 					loginData
 				);
 
+				console.log("Login response:", response);
+
 				// 根据响应格式获取数据
 				let token: string;
 				let user: User;

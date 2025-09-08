@@ -27,3 +27,6 @@ data/database.json
 Xeon_node_modules
 Curo_node_modules
 node-compile-cache
+/app/generated/prisma
+
+/app/generated/prisma

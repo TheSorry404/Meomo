@@ -1,25 +1,27 @@
 import { requireAuth } from "../../utils/auth";
-import { getDatabase } from "../../lib/database";
+import { PrismaClient } from "@prisma/client";
 
 export default requireAuth(
 	defineEventHandler(async (event) => {
+		const prisma = new PrismaClient();
 		try {
 			const user = event.context.user;
 
 			if (!user) {
 				throw createError({
 					statusCode: 401,
-					statusMessage: "用户未认证",
+					message: "用户未认证",
 				});
 			}
 
-			const db = getDatabase();
-			const userProfile = await db.getUserById(user.userId);
+			const userProfile = await prisma.user.findUnique({
+				where: { id: user.userId },
+			});
 
 			if (!userProfile) {
 				throw createError({
 					statusCode: 404,
-					statusMessage: "用户不存在",
+					message: "用户不存在",
 				});
 			}
 
@@ -39,7 +41,7 @@ export default requireAuth(
 			console.error("获取用户信息错误:", error);
 			throw createError({
 				statusCode: 500,
-				statusMessage: "获取用户信息失败",
+				message: "获取用户信息失败",
 			});
 		}
 	})

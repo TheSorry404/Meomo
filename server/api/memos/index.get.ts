@@ -1,15 +1,16 @@
 import { requireAuth } from "../../utils/auth";
-import { getDatabase } from "../../lib/database";
+import { PrismaClient } from "@prisma/client";
 
 export default requireAuth(
 	defineEventHandler(async (event) => {
+		const prisma = new PrismaClient();
 		try {
 			const user = event.context.user;
 
 			if (!user) {
 				throw createError({
 					statusCode: 401,
-					statusMessage: "用户未认证",
+					message: "用户未认证",
 				});
 			}
 
@@ -20,15 +21,29 @@ export default requireAuth(
 			const offset = (page - 1) * pageSize;
 			const search = query.search as string;
 
-			const db = getDatabase();
-
 			let memos;
 			if (search) {
 				// 如果有搜索查询，使用搜索功能
-				memos = await db.searchMemos(user.userId, search, pageSize);
+				memos = await prisma.$queryRawUnsafe(
+					`SELECT * FROM memos WHERE user_id = ? AND (title LIKE ? OR content LIKE ?) ORDER BY created_at DESC LIMIT ? OFFSET ?`,
+					user.userId,
+					`%${search}%`,
+					`%${search}%`,
+					pageSize,
+					offset
+				);
 			} else {
 				// 获取用户的备忘录列表
-				memos = await db.getMemosByUserId(user.userId, pageSize, offset);
+				memos = await prisma.memo.findMany({
+					where: {
+						userId: user.userId,
+					},
+					take: pageSize,
+					skip: offset,
+					orderBy: {
+						createdAt: "desc",
+					},
+				});
 			}
 
 			return {
@@ -51,7 +66,7 @@ export default requireAuth(
 			console.error("获取备忘录错误:", error);
 			throw createError({
 				statusCode: 500,
-				statusMessage: "获取备忘录失败",
+				message: "获取备忘录失败",
 			});
 		}
 	})

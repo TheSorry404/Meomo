@@ -1,8 +1,9 @@
 import { requireAuth } from "../../utils/auth";
-import { getDatabase } from "../../lib/database";
+import { PrismaClient } from "@prisma/client";
 
 export default requireAuth(
 	defineEventHandler(async (event) => {
+		const prisma = new PrismaClient();
 		try {
 			const user = event.context.user;
 			const memoId = parseInt(getRouterParam(event, "id") as string);
@@ -10,17 +11,21 @@ export default requireAuth(
 			if (!memoId) {
 				throw createError({
 					statusCode: 400,
-					statusMessage: "备忘录ID无效",
+					message: "备忘录ID无效",
 				});
 			}
 
-			const db = getDatabase();
-			const memo = await db.getMemoById(memoId, user.userId);
+			const memo = await prisma.memo.findFirst({
+				where: {
+					id: memoId,
+					userId: user.userId,
+				},
+			});
 
 			if (!memo) {
 				throw createError({
 					statusCode: 404,
-					statusMessage: "备忘录不存在",
+					message: "备忘录不存在",
 				});
 			}
 
@@ -37,7 +42,7 @@ export default requireAuth(
 			console.error("获取备忘录错误:", error);
 			throw createError({
 				statusCode: 500,
-				statusMessage: "获取备忘录失败",
+				message: "获取备忘录失败",
 			});
 		}
 	})

@@ -1,8 +1,9 @@
 import { hashPassword } from "../../lib/password";
 import { generateTokenPair, type JwtPayload } from "../../lib/auth";
-import { getDatabase } from "../../lib/database";
+import { PrismaClient } from "@prisma/client";
 
 export default defineEventHandler(async (event) => {
+	const prisma = new PrismaClient();
 	assertMethod(event, "POST");
 
 	try {
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
 		if (!username || !email || !password) {
 			throw createError({
 				statusCode: 400,
-				statusMessage: "用户名、邮箱和密码不能为空",
+				message: "用户名、邮箱和密码不能为空",
 			});
 		}
 
@@ -21,7 +22,7 @@ export default defineEventHandler(async (event) => {
 		if (!emailRegex.test(email)) {
 			throw createError({
 				statusCode: 400,
-				statusMessage: "邮箱格式不正确",
+				message: "邮箱格式不正确",
 			});
 		}
 
@@ -29,18 +30,18 @@ export default defineEventHandler(async (event) => {
 		if (password.length < 6) {
 			throw createError({
 				statusCode: 400,
-				statusMessage: "密码长度至少6位",
+				message: "密码长度至少6位",
 			});
 		}
 
-		const db = getDatabase();
-
 		// 检查邮箱是否已存在
-		const existingUserByEmail = await db.getUserByEmail(email);
-		if (existingUserByEmail) {
+		const existingUser = await prisma.user.findUnique({
+			where: { email },
+		});
+		if (existingUser) {
 			throw createError({
-				statusCode: 409,
-				statusMessage: "邮箱已被注册",
+				statusCode: 500,
+				message: "该邮箱已被注册",
 			});
 		}
 
@@ -48,10 +49,12 @@ export default defineEventHandler(async (event) => {
 		const hashedPassword = await hashPassword(password);
 
 		// 创建用户
-		const newUser = await db.createUser({
-			username,
-			email,
-			password: hashedPassword,
+		const newUser = await prisma.user.create({
+			data: {
+				username,
+				email,
+				password: hashedPassword,
+			},
 		});
 
 		// 生成JWT token
@@ -85,7 +88,7 @@ export default defineEventHandler(async (event) => {
 		console.error("注册错误:", error);
 		throw createError({
 			statusCode: 500,
-			statusMessage: "注册失败，请稍后重试",
+			message: "注册失败，请稍后重试",
 		});
 	}
 });
