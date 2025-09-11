@@ -1,107 +1,107 @@
 <template>
-  <aside class="dashboard-sidebar" :class="{ collapsed: isCollapsed }">
+  <aside class="dashboard-sidebar" :class="{ collapsed: uiStore.isSidebarCollapsed }">
     <div class="sidebar-content">
       <!-- 导航菜单 -->
       <nav class="sidebar-nav">
         <div class="nav-section">
-          <h3 class="nav-title">主要功能</h3>
+          <h3 class="nav-title" v-if="!uiStore.isSidebarCollapsed">主要功能</h3>
           <ul class="nav-list">
             <li class="nav-item">
               <NuxtLink to="/dashboard" class="nav-link" active-class="active">
                 <span class="nav-icon">📊</span>
-                <span class="nav-text">仪表板</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">仪表板</span>
               </NuxtLink>
             </li>
             <li class="nav-item">
               <NuxtLink to="/memos" class="nav-link" active-class="active">
                 <span class="nav-icon">📝</span>
-                <span class="nav-text">我的备忘录</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">我的备忘录</span>
               </NuxtLink>
             </li>
             <li class="nav-item">
               <NuxtLink to="/memos/new" class="nav-link" active-class="active">
                 <span class="nav-icon">➕</span>
-                <span class="nav-text">新建备忘录</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">新建备忘录</span>
               </NuxtLink>
             </li>
             <li class="nav-item">
               <NuxtLink to="/search" class="nav-link" active-class="active">
                 <span class="nav-icon">🔍</span>
-                <span class="nav-text">搜索</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">搜索</span>
               </NuxtLink>
             </li>
           </ul>
         </div>
 
-        <div class="nav-section">
+        <div class="nav-section" v-if="!uiStore.isSidebarCollapsed">
           <h3 class="nav-title">快速访问</h3>
           <ul class="nav-list">
             <li class="nav-item">
               <button class="nav-link nav-button" @click="showPinned">
                 <span class="nav-icon">📌</span>
-                <span class="nav-text">置顶备忘录</span>
-                <span class="nav-count">{{ pinnedCount }}</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">置顶备忘录</span>
+                <span class="nav-count" v-if="!uiStore.isSidebarCollapsed">{{ pinnedCount }}</span>
               </button>
             </li>
             <li class="nav-item">
               <button class="nav-link nav-button" @click="showRecent">
                 <span class="nav-icon">🕒</span>
-                <span class="nav-text">最近编辑</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">最近编辑</span>
               </button>
             </li>
             <li class="nav-item">
               <button class="nav-link nav-button" @click="showFavorites">
-                <span class="nav-icon">⭐</span>
-                <span class="nav-text">收藏夹</span>
+                <span class="nav-icon" v-if="!uiStore.isSidebarCollapsed">⭐</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">收藏夹</span>
               </button>
             </li>
             <li class="nav-item">
               <NuxtLink to="/trash" class="nav-link" active-class="active">
                 <span class="nav-icon">🗑️</span>
-                <span class="nav-text">回收站</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">回收站</span>
               </NuxtLink>
             </li>
           </ul>
         </div>
 
-        <div class="nav-section">
-          <h3 class="nav-title">标签</h3>
+        <div class="nav-section" v-if="!uiStore.isSidebarCollapsed">
+          <h3 class="nav-title" v-if="!uiStore.isSidebarCollapsed">标签</h3>
           <ul class="nav-list tags-list">
             <li v-for="tag in popularTags" :key="tag.name" class="nav-item">
               <button class="nav-link nav-button tag-link" @click="filterByTag(tag.name)">
                 <span class="nav-icon">🏷️</span>
-                <span class="nav-text">{{ tag.name }}</span>
-                <span class="nav-count">{{ tag.count }}</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">{{ tag.name }}</span>
+                <span class="nav-count" v-if="!uiStore.isSidebarCollapsed">{{ tag.count }}</span>
               </button>
             </li>
             <li class="nav-item">
               <NuxtLink to="/tags" class="nav-link view-all-link" active-class="active">
                 <span class="nav-icon">👁️</span>
-                <span class="nav-text">查看所有标签</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">查看所有标签</span>
               </NuxtLink>
             </li>
           </ul>
         </div>
 
         <div class="nav-section">
-          <h3 class="nav-title">设置</h3>
+          <h3 class="nav-title" v-if="!uiStore.isSidebarCollapsed">设置</h3>
           <ul class="nav-list">
             <li class="nav-item">
               <NuxtLink to="/profile" class="nav-link" active-class="active">
                 <span class="nav-icon">👤</span>
-                <span class="nav-text">个人资料</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">个人资料</span>
               </NuxtLink>
             </li>
             <li class="nav-item">
               <NuxtLink to="/settings" class="nav-link" active-class="active">
                 <span class="nav-icon">⚙️</span>
-                <span class="nav-text">应用设置</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">应用设置</span>
               </NuxtLink>
             </li>
             <li class="nav-item">
               <NuxtLink to="/help" class="nav-link" active-class="active">
                 <span class="nav-icon">❓</span>
-                <span class="nav-text">帮助中心</span>
+                <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">帮助中心</span>
               </NuxtLink>
             </li>
           </ul>
@@ -109,7 +109,7 @@
       </nav>
 
       <!-- 存储使用情况 -->
-      <div v-if="!isCollapsed" class="storage-info">
+      <div v-if="!uiStore.isSidebarCollapsed" class="storage-info">
         <div class="storage-header">
           <span class="storage-icon">💾</span>
           <span class="storage-title">存储空间</span>
@@ -124,13 +124,14 @@
 
     <!-- 折叠按钮 -->
     <button class="collapse-btn" @click="toggleCollapse">
-      <span :class="{ rotated: isCollapsed }">◀</span>
+      <span :class="{ rotated: uiStore.isSidebarCollapsed }">◀</span>
     </button>
   </aside>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useUiStore } from '~/stores/ui';
 
 // Props
 interface Props {
@@ -145,7 +146,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['toggle-collapse', 'filter-by-tag']);
 
 // 响应式数据
-const isCollapsed = ref(props.collapsed);
+const uiStore = useUiStore();
 const pinnedCount = ref(5);
 const usedStorage = ref('2.3 GB');
 const totalStorage = ref('10 GB');
@@ -168,8 +169,7 @@ const storagePercentage = computed(() => {
 
 // 方法
 const toggleCollapse = () => {
-  isCollapsed.value = !isCollapsed.value;
-  emit('toggle-collapse', isCollapsed.value);
+  uiStore.toggleSidebar();
 };
 
 const showPinned = () => {

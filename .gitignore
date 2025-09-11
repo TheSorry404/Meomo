@@ -24,11 +24,8 @@ logs
 !.env.example
 .vscode
 package-lock.json
-Xeon_node_modules
-Curo_node_modules
 node-compile-cache
 /app/generated/prisma
 
 /app/generated/prisma
-
-data/database.json
+prisma/dev.db

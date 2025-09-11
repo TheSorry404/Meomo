@@ -46,9 +46,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUserStore } from '#imports';
+import { useUiStore } from '~/stores/ui';
 
 // Props & Emits
-const emit = defineEmits(['toggle-sidebar']);
+// const emit = defineEmits(['toggle-sidebar']);
 
 // 响应式数据
 const quickSearchQuery = ref('');
@@ -70,8 +71,9 @@ const userInitials = computed(() => {
 });
 
 // 方法
+const uiStore = useUiStore();
 const toggleSidebar = () => {
-  emit('toggle-sidebar');
+  uiStore.toggleSidebar();
 };
 
 const performQuickSearch = () => {

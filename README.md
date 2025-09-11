@@ -10,11 +10,14 @@
    ```
 1. 配置环境变量
    - 复制 `.env.example` 文件并重命名为 `.env`
+   - 选择数据库种类，把`prisma`文件夹中`mysql.prisma`或`sqlite.prisma`文件改名为`schema.prisma`
    - 根据需要修改环境变量
 1. 初始化数据库
    ```bash
    npx prisma migrate dev --name init
    ```
+   
+   或者您没有选择修改`prisma`文件夹中的文件名，您可以在上述指令最后加入形式诸如`--schema ./prisma/sqlite.prisma`的参数。为了正常运行，建议您修改文件名再初始化数据库和运行本项目。
 1. 启动开发服务器
    ```bash
    npm run dev

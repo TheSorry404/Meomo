@@ -85,7 +85,7 @@
         </div>
         
         <!-- 隐私设置 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <!-- <div class="bg-white rounded-lg shadow-md p-6">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">隐私设置</h2>
           
           <div class="space-y-4">
@@ -131,10 +131,10 @@
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
         
         <!-- 数据管理 -->
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <!-- <div class="bg-white rounded-lg shadow-md p-6">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">数据管理</h2>
           
           <div class="space-y-4">
@@ -164,7 +164,7 @@
             </div>
           </div>
         </div>
-        
+         -->
         <!-- 保存按钮 -->
         <div class="flex justify-end space-x-4">
           <button 

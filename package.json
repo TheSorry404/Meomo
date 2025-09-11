@@ -4,7 +4,7 @@
 	"private": true,
 	"scripts": {
 		"build": "nuxt build",
-		"dev": "nuxt dev",
+		"dev": "nuxt dev --host",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"postinstall": "nuxt prepare"
@@ -17,6 +17,7 @@
 		"@pinia/nuxt": "^0.11.2",
 		"@prisma/client": "6.15.0",
 		"@prisma/nuxt": "^0.3.0",
+		"@tailwindcss/vite": "^4.1.13",
 		"@types/cors": "^2.8.19",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/uuid": "^10.0.0",
@@ -27,6 +28,7 @@
 		"jsonwebtoken": "^9.0.2",
 		"nuxt": "^4.0.3",
 		"pinia": "^3.0.3",
+		"tailwindcss": "^4.1.13",
 		"typescript": "^5.9.2",
 		"uuid": "^11.1.0",
 		"vue": "^3.5.18",
@@ -34,6 +36,8 @@
 		"yarn": "^1.22.22"
 	},
 	"devDependencies": {
+		"@nuxtjs/tailwindcss": "^6.14.0",
+		"@tailwindcss/postcss": "^4.1.13",
 		"@unocss/nuxt": "^66.4.2",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.4",

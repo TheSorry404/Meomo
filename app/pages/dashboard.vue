@@ -1,5 +1,5 @@
 <template>
-	<div class="dashboard">
+	<div class="dashboard" :class="{ 'sidebar-collapsed': uiStore.isSidebarCollapsed }">
 		<DashboardHeader />
 
 		<div class="dashboard-container">
@@ -262,6 +262,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useApi } from "~/composables/useApi";
 import type { Memo } from "~/types";
+import { useUiStore } from '~/stores/ui';
 
 // 定义组件名称
 defineOptions({
@@ -272,6 +273,8 @@ defineOptions({
 definePageMeta({
 	middleware: "auth",
 });
+
+const uiStore = useUiStore();
 
 // 响应式数据
 const loading = ref(false);
@@ -472,6 +475,11 @@ onMounted(() => {
 	flex: 1;
 	padding: 5rem 1.5rem 1.5rem;
 	margin-left: 256px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-collapsed .dashboard-main {
+  margin-left: 64px;
 }
 
 .stats-grid {

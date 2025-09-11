@@ -1,0 +1,60 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * 用户账户信息
+ */
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  avatar    String?
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  memos     Memo[]
+  settings  Settings[]
+
+  @@map("users")
+}
+
+/**
+ * 用户备忘录
+ */
+model Memo {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  tags      String?
+  color     String?   @default("#ffffff")
+  isPinned  Boolean   @default(false) @map("is_pinned")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int       @map("user_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  @@index([userId, isPinned])
+  @@map("memos")
+}
+
+
+model Settings {
+  id          Int      @id @default(autoincrement())
+  theme       String   @default("light")
+  fontSize    Int      @default(14) @map("font_size")
+  memoPerPage Int      @default(10) @map("memo_per_page")
+  language    String   @default("zh-cn")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int      @map("user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
