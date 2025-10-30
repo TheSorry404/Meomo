@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -12,9 +12,9 @@ datasource db {
  */
 model User {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
-  avatar    String?
+  username  String   @unique @db.VarChar(20)
+  email     String   @unique @db.VarChar(255)
+  avatar    String?  @db.VarChar(512)
   password  String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -29,10 +29,10 @@ model User {
  */
 model Memo {
   id        Int       @id @default(autoincrement())
-  title     String
-  content   String
-  tags      String?
-  color     String?   @default("#ffffff")
+  title     String    @db.VarChar(100)
+  content   String    @db.Text
+  tags      Json?     @db.Json
+  color     String?   @default("#ffffff") @db.VarChar(9)
   isPinned  Boolean   @default(false) @map("is_pinned")
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int       @map("user_id")
@@ -47,12 +47,12 @@ model Memo {
 
 model Settings {
   id          Int      @id @default(autoincrement())
-  theme       String   @default("light")
+  theme       String   @default("light") @db.VarChar(20)
   fontSize    Int      @default(14) @map("font_size")
   memoPerPage Int      @default(10) @map("memo_per_page")
-  language    String   @default("zh-cn")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int      @map("user_id")
+  language    String   @default("zh-cn") @db.VarChar(8)
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int    @map("user_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 

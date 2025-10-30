@@ -19,7 +19,7 @@
               </NuxtLink>
             </li>
             <li class="nav-item">
-              <NuxtLink to="/memos/new" class="nav-link" active-class="active">
+              <NuxtLink @click="createNewMemo" class="nav-link" active-class="active">
                 <span class="nav-icon">➕</span>
                 <span class="nav-text" v-if="!uiStore.isSidebarCollapsed">新建备忘录</span>
               </NuxtLink>
@@ -32,6 +32,13 @@
             </li>
           </ul>
         </div>
+
+        <MemoEditor
+          v-if="showEditor"
+          :memo="currentEditingMemo"
+          @save="saveMemo"
+          @cancel="cancelEdit"
+        />
 
         <div class="nav-section" v-if="!uiStore.isSidebarCollapsed">
           <h3 class="nav-title">快速访问</h3>
@@ -132,6 +139,33 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useUiStore } from '~/stores/ui';
+
+const showEditor = ref(false);
+const currentEditingMemo = ref<Memo | null>(null);
+
+const createNewMemo = () => {
+	currentEditingMemo.value = null;
+	showEditor.value = true;
+};
+
+const saveMemo = async (memoData: any) => {
+	try {
+		const response = await useApi().post('/memos', memoData)
+		console.log(response);
+	} catch (error) {
+		console.error("Failed to create memos:", error);
+	} finally {
+		loading.value = false;
+	}
+	console.log("Save memo:", memoData);
+	showEditor.value = false;
+	await loadMemos();
+};
+
+const cancelEdit = () => {
+	showEditor.value = false;
+	currentEditingMemo.value = null;
+};
 
 // Props
 interface Props {

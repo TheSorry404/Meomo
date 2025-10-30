@@ -263,6 +263,8 @@ import { ref, computed, onMounted } from "vue";
 import { useApi } from "~/composables/useApi";
 import type { Memo } from "~/types";
 import { useUiStore } from '~/stores/ui';
+// import axios from "axios";
+// import type { Body } from "nuxt/dist/head/runtime/components";
 
 // 定义组件名称
 defineOptions({
@@ -400,7 +402,14 @@ const editMemo = (memo: Memo) => {
 };
 
 const saveMemo = async (memoData: any) => {
-	// TODO: 实现保存逻辑
+	try {
+		const response = await useApi().post('/memos', memoData)
+		console.log(response);
+	} catch (error) {
+		console.error("Failed to create memos:", error);
+	} finally {
+		loading.value = false;
+	}
 	console.log("Save memo:", memoData);
 	showEditor.value = false;
 	await loadMemos();
@@ -435,18 +444,20 @@ const changePage = (page: number) => {
 const loadMemos = async () => {
 	loading.value = true;
 	try {
-    // 获取Memos
-    const response = await useApi().get('/memos', {
-      params: {
-        page: currentPage.value,
-        pageSize: pageSize.value,
-        search: searchQuery.value,
-        tags: selectedTags.value.join(','),
-        timeRange: selectedTimeRange.value
-      }
-    })
-    console.log(response);
-    
+	// 获取Memos
+	const response = await useApi().get('/memos', {
+		params: {
+			page: currentPage.value,
+			pageSize: pageSize.value,
+			search: searchQuery.value,
+			tags: selectedTags.value.join(','),
+			timeRange: selectedTimeRange.value
+		}
+	})
+	console.log(response);
+	// 更新memos数据
+	memos.value = response.data.memos || [];
+	totalMemos.value = response.total || response.data?.length || 0;
 	} catch (error) {
 		console.error("Failed to load memos:", error);
 	} finally {
@@ -654,6 +665,7 @@ onMounted(() => {
 
 .memos-section {
 	margin-bottom: 2rem;
+	flex: auto;
 }
 
 .section-title {
@@ -694,8 +706,10 @@ onMounted(() => {
 
 .memos-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-template-columns: repeat(auto-fill);
 	gap: 1rem;
+	/* min-height: 200px; */
+	/* grid-auto-rows: minmax(200px, auto); */
 }
 
 .memos-list {
